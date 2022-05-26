@@ -1,0 +1,53 @@
+class TripleSquareGame {
+	field Square square1, square2, square3;
+	field int direction;
+
+	constructor TripleSquareGame new() {
+		let square1 = Square.new(226, 108, 20);
+		let square2 = Square.new(266, 108, 20);
+      let square3 = Square.new(246, 108, 20);
+		let direction = 0;
+		return this;
+	}
+	
+	method void dispose() {
+      do square1.dispose();
+      do square2.dispose();
+      do square3.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+   
+   method void moveSquare() {
+      if (direction = 1) { do square1.moveUp(); do square2.moveDown(); do square3.moveRight(); }
+      if (direction = 2) { do square1.moveDown(); do square2.moveUp(); do square3.moveLeft();}
+      if (direction = 3) { do square1.moveLeft(); do square2.moveRight(); do square3.moveUp();}
+      if (direction = 4) { do square1.moveRight(); do square2.moveLeft(); do square3.moveDown(); }
+      do Sys.wait(10);  // delays the next movement
+      return;
+   }
+   
+   method void run() {
+      var char key; 
+      
+      while (true) {
+         // waits for a key to be pressed
+         while (key = 0) {
+            let key = Keyboard.keyPressed();
+            do moveSquare();
+         }
+
+         if (key = 131) { let direction = 1; }   // up arrow
+         if (key = 133) { let direction = 2; }   // down arrow
+         if (key = 130) { let direction = 3; }   // left arrow
+         if (key = 132) { let direction = 4; }   // right arrow
+
+         // waits for the key to be released
+         while (~(key = 0)) {
+            let key = Keyboard.keyPressed();
+            do moveSquare();
+         }
+     } // while
+     return;
+   }
+}
